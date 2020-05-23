@@ -44,6 +44,10 @@ public class CustomerController extends HttpServlet {
 				theCommand = theCheck;
 			} 
 			
+			if(theCommand == null && theCheck == null) {
+				theCommand = "LOAD";
+			}
+			
 			switch (theCommand) {
 			
 			case "LIST":
@@ -62,6 +66,22 @@ public class CustomerController extends HttpServlet {
 				handleLogout(request, response);
 				break;
 				
+			case "RECHARGE":
+				getRechargeForm(request, response);
+				break;
+			
+			case "RECHARGE_HANDLE":
+				handleRecharge(request, response);
+				break;
+				
+			case "TRANSFER":
+				getTransferForm(request, response);
+				break;
+				
+			case "GET_MOVIES":
+				getMovies(request, response);
+				break;
+				
 			default:
 				defaultPage(request, response);
 				break;
@@ -77,6 +97,25 @@ public class CustomerController extends HttpServlet {
 		
 		request.getRequestDispatcher("Home.jsp").forward(request, response);
 	}
+	
+	public void getRechargeForm(HttpServletRequest request, HttpServletResponse response)throws Exception {
+		response.sendRedirect("SelectService.jsp");
+	}
+	
+	public void getTransferForm(HttpServletRequest request, HttpServletResponse response)throws Exception {
+		request.setAttribute("formName", "Transfer Money to other User :");
+		List<Customer> cust = customerDbUtil.getCustomers();
+		request.setAttribute("operators", cust);
+		request.setAttribute("formName", "Transfer Money to other User :");
+		request.getRequestDispatcher("TransferForm.jsp").forward(request, response);
+	}
+	
+	public void getMovies(HttpServletRequest request, HttpServletResponse response)throws Exception {
+	
+		request.getRequestDispatcher("MoviesControllerServlet").forward(request, response);
+		
+	}
+	
 	
 	public void listCustomers(HttpServletRequest request, HttpServletResponse response)throws Exception {
 		List<Customer> customers = customerDbUtil.getCustomers();
@@ -94,22 +133,49 @@ public class CustomerController extends HttpServlet {
 		Customer newCustomer = new Customer(name,email,uname,password);
 		
 		customerDbUtil.addCustomer(newCustomer);
-		
-		request.setAttribute("operation", "Register");
-		request.setAttribute("message", "Registration successful, login and start using QuickPay");
-		request.getRequestDispatcher("Success.jsp").forward(request, response);
+		String id = customerDbUtil.getCustomerId(uname);
+		System.out.println("----> cust controller :"+id);
+		request.setAttribute("userId", id);
+		request.setAttribute("command", "CREATE");
+		request.getRequestDispatcher("WalletController").forward(request, response);
 		
 		
 	}
 	public void loadCustomer(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String theCustomerId = request.getParameter("CustomerId");
+		HttpSession session = request.getSession();
+		String theCustomerId = (String) session.getAttribute("userid");
 		
 		Customer theCustomer = customerDbUtil.getCustomer(theCustomerId);
 		
 		request.setAttribute("THE_Customer", theCustomer);
 		
-		request.getRequestDispatcher("EditDetailsForm.jsp").forward(request, response);
+		request.getRequestDispatcher("Account.jsp").forward(request, response);
 	}
+	
+	public void handleRecharge(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		if(request.getParameter("type").equals("TV")) {
+			request.setAttribute("type", "RECHARGE TV");
+			request.setAttribute("info", request.getParameter("operator"));
+			request.setAttribute("extra", request.getParameter("number"));
+			request.setAttribute("amount", request.getParameter("amount"));
+		} else if (request.getParameter("type").equals("MOBILE")){
+			request.setAttribute("type", "RECHARGE MOBILE");
+			request.setAttribute("info", request.getParameter("operator"));
+			request.setAttribute("extra", request.getParameter("number"));
+			request.setAttribute("amount", request.getParameter("amount"));
+		} else {
+			request.setAttribute("type", "RECHARGE METRO");
+			request.setAttribute("info", request.getParameter("operator"));
+			request.setAttribute("extra", request.getParameter("number"));
+			request.setAttribute("amount", request.getParameter("amount"));
+		}
+		
+		request.setAttribute("command", "UPDATE");
+		request.getRequestDispatcher("WalletController").forward(request, response);
+		
+	}
+	
 	public void updateCustomer(HttpServletRequest request, HttpServletResponse response)throws Exception {
 		String name = request.getParameter("fname");
 		String email = request.getParameter("email");
@@ -140,7 +206,9 @@ public class CustomerController extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("userid", String.valueOf(userid));
 			session.setAttribute("uname", String.valueOf(uname));
-			request.getRequestDispatcher("AfterLogin.jsp").forward(request, response);
+			
+			request.setAttribute("command", "GET");
+			request.getRequestDispatcher("WalletController").forward(request, response);
 		} else {
 			request.setAttribute("operation", "Login");
 			request.setAttribute("message", "Incorrect Credentials...");
@@ -151,10 +219,30 @@ public class CustomerController extends HttpServlet {
 	public void handleLogout(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
 		session.removeAttribute("userid");
+		session.removeAttribute("uname");
+		session.removeAttribute("balance");
 		session.setMaxInactiveInterval(0);
 		request.setAttribute("operation", "Logout");
 		request.setAttribute("message", "Logout successful, thanks for using QuickPay!");
 		request.getRequestDispatcher("Success.jsp").forward(request, response);
+		
+	}
+	
+	public void handleTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		HttpSession session = request.getSession();
+		if(request.getParameter("type").equals("other")) {
+			request.setAttribute("name", customerDbUtil.getCustomerName(request.getParameter("user")));
+			request.setAttribute("user", request.getParameter("user"));
+			request.setAttribute("amount", request.getParameter("amount"));
+			
+		} else {
+			request.setAttribute("user", session.getAttribute("userid"));
+			request.setAttribute("amount", request.getParameter("amount"));
+		}
+		
+		request.setAttribute("command", request.getParameter("TRANSACT"));
+		request.getRequestDispatcher("WalletController").forward(request, response);
 		
 	}
 
@@ -183,6 +271,14 @@ public class CustomerController extends HttpServlet {
 			
 			case "HOME":
 				defaultPage(request, response);
+				break;
+				
+			case "RECHARGE_HANDLE":
+				handleRecharge(request, response);
+				break;
+				
+			case "TRANSFER_HANDLE":
+				handleTransfer(request, response);
 				break;
 				
 			default:

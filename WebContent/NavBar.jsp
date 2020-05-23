@@ -16,10 +16,18 @@
 		pageContext.setAttribute("button2", "Signup");
 		pageContext.setAttribute("route2", "Signup.jsp");
 	} else {
-		pageContext.setAttribute("button1", "My Orders");
-		pageContext.setAttribute("route1", "Orders.jsp");
+		request.setAttribute("command", "LOAD");
+		pageContext.setAttribute("button1", "My Account");
+		pageContext.setAttribute("route1", "CustomerController");
 		pageContext.setAttribute("button2", "Logout");
 		pageContext.setAttribute("route2", "Logout.jsp");
+	}
+
+	boolean isBalance = false;
+	if(session.getAttribute("balance") != null){
+		isBalance = true;
+		pageContext.setAttribute("balance", session.getAttribute("balance"));
+		pageContext.setAttribute("check", isBalance);
 	}
 
 %>
@@ -40,6 +48,15 @@
       <li class="nav-item active">
         <a class="nav-link" href="${route2}"><c:out value="${button2}" /></a>
       </li>
+      <c:if test="${check}">
+      <li class="nav-item active">
+        <a class="nav-link active" href="UserOrdersController" >History</a>
+      </li>
+      	<li class="nav-item active">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Balance : <c:out value="${balance}" /></a>
+      </li>
+      </c:if>
+      
     </ul>
   </div>
 </nav>

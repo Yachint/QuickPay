@@ -115,7 +115,7 @@ public class CustomerDbUtil {
 			
 			myConn = dataSource.getConnection();
 			
-			String sql = "select * from Customers where id=?";
+			String sql = "select * from Customers where UserId=?";
 			
 			myStmt = myConn.prepareStatement(sql);
 			
@@ -136,6 +136,72 @@ public class CustomerDbUtil {
 			}				
 			
 			return theCustomer;
+		}
+		finally {
+			
+			close(myConn, myStmt, myRs);
+		}
+	}
+	
+	public String getCustomerId(String uname) throws Exception {
+		
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		ResultSet myRs = null;
+		String userId = null;
+		
+		try {			
+			myConn = dataSource.getConnection();
+			
+			String sql = "select UserId from Customers where Uname=?";
+			
+			myStmt = myConn.prepareStatement(sql);
+			
+			myStmt.setString(1, uname);
+			
+			myRs = myStmt.executeQuery();
+			
+			if (myRs.next()) {
+				userId = String.valueOf(myRs.getInt("UserId"));
+			}
+			else {
+				throw new Exception("Could not find Customer with uname: " + uname);
+			}				
+			
+			return userId;
+		}
+		finally {
+			
+			close(myConn, myStmt, myRs);
+		}
+	}
+	
+public String getCustomerName(String userId) throws Exception {
+		
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		ResultSet myRs = null;
+		String name = null;
+		
+		try {			
+			myConn = dataSource.getConnection();
+			
+			String sql = "select Name from Customers where UserId=?";
+			
+			myStmt = myConn.prepareStatement(sql);
+			
+			myStmt.setInt(1, Integer.parseInt(userId));
+			
+			myRs = myStmt.executeQuery();
+			
+			if (myRs.next()) {
+				name = String.valueOf(myRs.getString("Name"));
+			}
+			else {
+				throw new Exception("Could not find Customer with uid: " + userId);
+			}				
+			
+			return name;
 		}
 		finally {
 			

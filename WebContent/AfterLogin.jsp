@@ -47,7 +47,10 @@
 			    <h5 class="card-title"><b>Pay Bills</b></h5>
 			    <hr class="my-4">
 			    <p class="card-text">Pay bills like Prepaid Mobile, TV Recharge and lot more.</p>
-			    <a href="#" class="btn btn-primary">Explore</a>
+			    <form action="CustomerController" method="GET">
+			    	<input type="hidden" name="command" value="RECHARGE">
+			    	<button class="btn btn-primary">Explore</button>
+			    </form>
 			  </div>
 	 		 </div>
 	 	</div>
@@ -59,7 +62,10 @@
 			    <h5 class="card-title"><b>Transfer Money</b></h5>
 			    <hr class="my-4">
 			    <p class="card-text">Send Money to other users using QuickPay Instantly!</p>
-			    <a href="#" class="btn btn-primary">Explore</a>
+			    <form action="CustomerController" method="GET">
+			    	<input type="hidden" name="command" value="TRANSFER">
+			    	<button  class="btn btn-primary">Explore</button>
+			    </form>
 			  </div>
 	  		</div>
 	  	</div>
@@ -71,7 +77,10 @@
 			    <h5 class="card-title"><b>Movie Tickets</b></h5>
 			    <hr class="my-4">
 			    <p class="card-text">Book tickets for famous blockbuster films near you.</p>
-			    <a href="#" class="btn btn-primary">Explore</a>
+			    <form action="CustomerController" method="GET">
+			    	<input type="hidden" name="command" value="GET_MOVIES">
+			    	<button  class="btn btn-primary">Explore</button>
+			    </form>
 			 </div> 		
 	  		</div>
 	  	</div>
