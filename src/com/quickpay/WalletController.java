@@ -100,11 +100,22 @@ public class WalletController extends HttpServlet {
 	
 	public void bookMovie(HttpServletRequest request, HttpServletResponse response)throws Exception {
 		
+//		System.out.println("Entered Book..");
 		HttpSession session = request.getSession();
 		Movies movie = (Movies) request.getAttribute("movie");
 		
+		String userId = (String) session.getAttribute("userid");
+		String balance = (String) session.getAttribute("balance");
 		
+		int newBalance = Integer.parseInt(balance) - movie.getCost()* Integer.parseInt(((String) request.getAttribute("tickets")));
 		
+		System.out.println("Balance New :"+newBalance);
+		walletDbUtil.updateWallet(userId, newBalance);
+		
+		request.setAttribute("command", "BOOK");
+		request.setAttribute("movie", movie);
+		request.setAttribute("tickets", request.getAttribute("tickets"));
+		request.getRequestDispatcher("UserOrdersController").forward(request, response);
 	}
 	
 	public void updateWalletTransfer(HttpServletRequest request, HttpServletResponse response)throws Exception {

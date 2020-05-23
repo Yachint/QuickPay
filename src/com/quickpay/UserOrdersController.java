@@ -62,6 +62,11 @@ public class UserOrdersController extends HttpServlet {
 					
 				case "GET":
 					getOrders(request, response);
+					break;
+				
+				case "BOOK":
+					ticketReciept(request, response);
+					break;
 					
 				default:
 					getOrders(request, response);
@@ -98,6 +103,23 @@ public class UserOrdersController extends HttpServlet {
 			request.setAttribute("command", "REFRESH");
 			request.getRequestDispatcher("WalletController").forward(request, response);
 		
+	}
+	
+	void ticketReciept(HttpServletRequest request, HttpServletResponse response)throws Exception {
+		
+		HttpSession session = request.getSession();
+		Movies movie = (Movies) request.getAttribute("movie");
+		
+		String uid = (String) session.getAttribute("userid");
+		String type = "MOVIE TICKET";
+		String info = movie.getName();
+		String extra = request.getAttribute("tickets")+" - $"+movie.getCost();
+		String amount = String.valueOf(Integer.parseInt((String) request.getAttribute("tickets")) * movie.getCost());
+		System.out.println(uid+" "+type+" "+info+" "+extra+" "+amount+" ");
+		
+		userOrdersDbUtil.createOrder(uid, type, info, extra, amount);
+		request.setAttribute("command", "REFRESH");
+		request.getRequestDispatcher("WalletController").forward(request, response);
 	}
 	
 	void getOrders(HttpServletRequest request, HttpServletResponse response)throws Exception {

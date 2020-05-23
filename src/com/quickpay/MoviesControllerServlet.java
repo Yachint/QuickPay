@@ -82,7 +82,7 @@ public class MoviesControllerServlet extends HttpServlet {
 		Movies movie = moviesDbUtil.getMovie(request.getParameter("MovieId"));
 		
 		request.setAttribute("command", "BOOK");
-		request.setAttribute("movieCost", request.getParameter("tickets"));
+		request.setAttribute("tickets", request.getParameter("tickets"));
 		request.setAttribute("movie", movie);
 		request.getRequestDispatcher("WalletController").forward(request, response);
 		
