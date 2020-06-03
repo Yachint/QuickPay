@@ -33,7 +33,10 @@
     <p class="card-text">Name: <c:out value="${cust.getName()}" /></p>
     <p class="card-text">Email: <c:out value="${cust.getEmail()}" /></p>
     <p class="card-text">Username: <c:out value="${cust.getUname()}" /></p>
-    <a href="#" class="btn btn-primary">Edit Details</a>
+    <form action="CustomerController" method="GET" >
+    	<input type="hidden" name="command" value="EDIT_EXISTING">
+    	<button class="btn btn-primary" type="submit" >Edit Details</button>
+    </form>
   </div>
   <div class="card-footer">
     Account Balance: <c:out value="${bal}" />

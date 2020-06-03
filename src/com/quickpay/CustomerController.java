@@ -48,6 +48,7 @@ public class CustomerController extends HttpServlet {
 				theCommand = "LOAD";
 			}
 			
+			System.out.println("CustController------>"+theCommand);
 			switch (theCommand) {
 			
 			case "LIST":
@@ -60,6 +61,10 @@ public class CustomerController extends HttpServlet {
 			
 			case "DELETE":
 				deleteCustomer(request, response);
+				break;
+				
+			case "EDIT_EXISTING":
+				editDetails(request, response);
 				break;
 				
 			case "LOGOUT":
@@ -114,6 +119,15 @@ public class CustomerController extends HttpServlet {
 	
 		request.getRequestDispatcher("MoviesControllerServlet").forward(request, response);
 		
+	}
+	
+	
+	public void editDetails(HttpServletRequest request, HttpServletResponse response)throws Exception {
+		
+		HttpSession session = request.getSession();
+		Customer cust = customerDbUtil.getEditCustomer((String) session.getAttribute("userid"));
+		request.setAttribute("cust", cust);
+		request.getRequestDispatcher("EditDetails.jsp").forward(request, response);
 	}
 	
 	
@@ -176,21 +190,21 @@ public class CustomerController extends HttpServlet {
 		
 	}
 	
-	public void updateCustomer(HttpServletRequest request, HttpServletResponse response)throws Exception {
-		String name = request.getParameter("fname");
-		String email = request.getParameter("email");
-		String uname = request.getParameter("uname");
-		String password = request.getParameter("pass");
-		HttpSession session = request.getSession();
-		
-		Customer newCustomer = new Customer((Integer)session.getAttribute("userid"),name,email,uname,password);
-		customerDbUtil.updateCustomer(newCustomer);
-		
-		request.setAttribute("operation", "Update");
-		request.setAttribute("message", "Update successful, Click the button below to continue using QuickPay");
-		request.getRequestDispatcher("Success.jsp").forward(request, response);
-		
-	}
+//	public void updateCustomer(HttpServletRequest request, HttpServletResponse response)throws Exception {
+//		String name = request.getParameter("fname");
+//		String email = request.getParameter("email");
+//		String uname = request.getParameter("uname");
+//		String password = request.getParameter("pass");
+//		HttpSession session = request.getSession();
+//		
+//		Customer newCustomer = new Customer((Integer)session.getAttribute("userid"),name,email,uname,password);
+//		customerDbUtil.updateCustomer(newCustomer);
+//		
+//		request.setAttribute("operation", "Update");
+//		request.setAttribute("message", "Update successful, Click the button below to continue using QuickPay");
+//		request.getRequestDispatcher("Success.jsp").forward(request, response);
+//		
+//	}
 	public void deleteCustomer(HttpServletRequest request, HttpServletResponse response)throws Exception {
 		HttpSession session = request.getSession();
 		customerDbUtil.deleteCustomer((String)session.getAttribute("userid"));
@@ -228,6 +242,21 @@ public class CustomerController extends HttpServlet {
 		
 	}
 	
+	public void editForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		HttpSession session = request.getSession();
+		String name = request.getParameter("fname");
+		String email = request.getParameter("email");
+		String pass = request.getParameter("pass");
+		
+		Customer cust = new Customer(name,email,(String) session.getAttribute("uname"),pass);
+		customerDbUtil.updateCustomer(cust, (String) session.getAttribute("userid"));
+		request.setAttribute("operation", "Edit");
+		request.setAttribute("message", "Edit Details successful!");
+		request.getRequestDispatcher("Success.jsp").forward(request, response);
+		
+	}
+	
 	public void handleTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		HttpSession session = request.getSession();
@@ -261,16 +290,16 @@ public class CustomerController extends HttpServlet {
 				addCustomer(request, response);
 				break;
 				
-			case "UPDATE":
-				updateCustomer(request, response);
-				break;
-				
 			case "LOGIN":
 				handleLogin(request, response);
 				break;
 			
 			case "HOME":
 				defaultPage(request, response);
+				break;
+				
+			case "EDIT_FORM":
+				editForm(request, response);
 				break;
 				
 			case "RECHARGE_HANDLE":

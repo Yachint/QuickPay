@@ -77,14 +77,24 @@ public class MoviesControllerServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("MovieId"));
 		int tickets = Integer.parseInt(request.getParameter("tickets"));
 		
-		moviesDbUtil.bookTicket(id, tickets);
+		int res = moviesDbUtil.bookTicket(id, tickets);
 		
-		Movies movie = moviesDbUtil.getMovie(request.getParameter("MovieId"));
+		if(res == -1) {
+			request.setAttribute("operation", "Book Tickets");
+			request.setAttribute("message", "Tickets sold out or you have entered an invalid amount!");
+			request.getRequestDispatcher("Incorrect.jsp").forward(request, response);
+			
+		} else {
+			Movies movie = moviesDbUtil.getMovie(request.getParameter("MovieId"));
+			
+			request.setAttribute("command", "BOOK");
+			request.setAttribute("tickets", request.getParameter("tickets"));
+			request.setAttribute("movie", movie);
+			request.getRequestDispatcher("WalletController").forward(request, response);
+			
+		}
 		
-		request.setAttribute("command", "BOOK");
-		request.setAttribute("tickets", request.getParameter("tickets"));
-		request.setAttribute("movie", movie);
-		request.getRequestDispatcher("WalletController").forward(request, response);
+
 		
 	}
 

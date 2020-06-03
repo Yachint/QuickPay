@@ -16,15 +16,32 @@ public class MoviesDbUtil {
 	}
 	
 	
-	synchronized public void bookTicket(int Id, int tickets) throws Exception{
+	synchronized public int bookTicket(int Id, int tickets) throws Exception{
 		
 		Connection myConn = null;
 		PreparedStatement myStmt = null;
+		PreparedStatement myStmt1 = null;
 		ResultSet myRes = null;
+		int numTickets = 0;
 		
 		try {
 			
 			myConn = dataSource.getConnection();
+			
+			String sql1 = "Select movieTickets from Movies where movieId = ?";
+			
+			myStmt1 = myConn.prepareStatement(sql1);
+			myStmt1.setInt(1, Id);
+			
+			myRes = myStmt1.executeQuery();
+			
+			if(myRes.next()) {
+				numTickets = myRes.getInt("movieTickets");
+			}
+			
+			if(numTickets < tickets) {
+				return -1;
+			}
 			
 			String sql = "UPDATE Movies set movieTickets = movieTickets - ? where movieId = ?";
 			
@@ -34,6 +51,8 @@ public class MoviesDbUtil {
 			myStmt.setInt(2, Id);
 			
 			myStmt.execute();
+			
+			return 1;
 			
 		} finally {
 			close(myConn, myStmt, myRes);

@@ -143,6 +143,51 @@ public class CustomerDbUtil {
 		}
 	}
 	
+	
+	public Customer getEditCustomer(String theCustomerId) throws Exception {
+
+		Customer theCustomer = null;
+		
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		ResultSet myRs = null;
+		int CustomerId;
+		
+		try {
+			CustomerId = Integer.parseInt(theCustomerId);
+			
+			myConn = dataSource.getConnection();
+			
+			String sql = "select * from Customers where UserId=?";
+			
+			myStmt = myConn.prepareStatement(sql);
+			
+			myStmt.setInt(1, CustomerId);
+			
+			myRs = myStmt.executeQuery();
+			
+			if (myRs.next()) {
+				String name = myRs.getString("Name");
+				String email = myRs.getString("Email");
+				String uname = myRs.getString("Uname");
+				String pass = myRs.getString("Password");
+				
+				
+				theCustomer = new Customer(name, email, uname, pass);
+			}
+			else {
+				throw new Exception("Could not find Customer id: " + CustomerId);
+			}				
+			
+			return theCustomer;
+		}
+		finally {
+			
+			close(myConn, myStmt, myRs);
+		}
+	}
+	
+	
 	public String getCustomerId(String uname) throws Exception {
 		
 		Connection myConn = null;
@@ -209,7 +254,7 @@ public String getCustomerName(String userId) throws Exception {
 		}
 	}
 	
-	public void updateCustomer(Customer theCustomer) throws Exception {
+	public void updateCustomer(Customer theCustomer, String userId) throws Exception {
 		
 		Connection myConn = null;
 		PreparedStatement myStmt = null;
@@ -220,7 +265,7 @@ public String getCustomerName(String userId) throws Exception {
 			
 			
 			String sql = "update Customers "
-						+ "set Name=?, Email=?, Uname=? "
+						+ "set Name=?, Email=?, Password=? "
 						+ "where UserId=?";
 			
 			
@@ -229,8 +274,8 @@ public String getCustomerName(String userId) throws Exception {
 
 			myStmt.setString(1, theCustomer.getName());
 			myStmt.setString(2, theCustomer.getEmail());
-			myStmt.setString(3, theCustomer.getUname());
-			myStmt.setInt(4, theCustomer.getUserId());
+			myStmt.setString(3, theCustomer.getPassword());
+			myStmt.setInt(4, Integer.parseInt(userId));
 			
 
 			myStmt.execute();
