@@ -26,6 +26,10 @@ After downloading/cloning repository and loading the project in the Eclipse-EE I
 
 When the Server has launched, visit http://localhost:8080 to launch the App.
 
+## Live Demo
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=p1K1Yk-0iXQ&t" target="_blank"><img src="http://img.youtube.com/vi/p1K1Yk-0iXQ&t/0.jpg" alt="QuickPay Live Demo" width="240" height="180" border="10" /></a>
+
 ## Screenshots
 
 <img src="images/home.png" class="align-center" width="800">
