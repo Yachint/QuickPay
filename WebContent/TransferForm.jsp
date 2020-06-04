@@ -40,9 +40,17 @@ request.getRequestDispatcher("NavBar.jsp").include(request, response);
 	}
 	if(request.getAttribute("operators") != null){
 		cust = (ArrayList<Customer>)request.getAttribute("operators");
+		for(int i=0;i<cust.size();i++){
+			Customer temp = cust.get(i);
+			if((temp.getUname()).equals((String) session.getAttribute("uname"))) cust.remove(i);
+		}
 	}
 	if(request.getParameter("operators") != null){
 		cust = (ArrayList<Customer>)request.getAttribute("operators");
+		for(int i=0;i<cust.size();i++){
+			Customer temp = cust.get(i);
+			if((temp.getUname()).equals((String) session.getAttribute("uname"))) cust.remove(i);
+		}
 	}
 	pageContext.setAttribute("ops", ops);
 	pageContext.setAttribute("Form", formName);
