@@ -1,5 +1,5 @@
 # QuickPay
-Payment Portal based on Java Servlets, JSP and MySQL
+Payments Portal based on Java Servlets, JSP and MySQL
 
 <p float="left">
 <img src="images/java1.png" width="300" class="align-center" >
