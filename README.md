@@ -28,7 +28,9 @@ When the Server has launched, visit http://localhost:8080 to launch the App.
 
 ## Live Demo
 
-[![](https://img.youtube.com/vi/p1K1Yk-0iXQ&t/0.jpg)](http://www.youtube.com/watch?v=p1K1Yk-0iXQ&t)
+[![Video Link](https://img.youtube.com/vi/p1K1Yk-0iXQ&t/0.jpg)](https://www.youtube.com/watch?v=p1K1Yk-0iXQ&t)
+
+Link to Video : https://www.youtube.com/watch?v=p1K1Yk-0iXQ&t
 
 ## Screenshots
 
