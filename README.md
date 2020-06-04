@@ -28,7 +28,7 @@ When the Server has launched, visit http://localhost:8080 to launch the App.
 
 ## Live Demo
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=p1K1Yk-0iXQ&t" target="_blank"><img src="http://img.youtube.com/vi/p1K1Yk-0iXQ&t/0.jpg" alt="QuickPay Live Demo" width="240" height="180" border="10" /></a>
+[![](https://img.youtube.com/vi/p1K1Yk-0iXQ&t/0.jpg)](http://www.youtube.com/watch?v=p1K1Yk-0iXQ&t)
 
 ## Screenshots
 
